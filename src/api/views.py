@@ -2,8 +2,8 @@ from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from utils.hasher import get_message_hash
-from src.schemas import Message
+from src.utils.hasher import get_message_hash
+from src.api.schemas import Message
 
 router = APIRouter()
 messages: list[Message] = []
