@@ -18,14 +18,14 @@ async def message_create(message: str, secret_key: str, session: AsyncSession) -
 
     try:
         await create_file(path, message)
+        session.add(entity)
+        await session.commit()
+
+        return message_hash
+
     except Exception as e:
         print(e)
         raise FileCreateException
-
-    session.add(entity)
-    await session.commit()
-
-    return message_hash
 
 
 async def message_get(

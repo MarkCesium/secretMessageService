@@ -4,7 +4,6 @@
 You can then retrieve that message with the secret key and hash
 
 #### Near features (todo's)
-- Flush-notifications
 - Cache
 - Delete message after period (Celery)
 - Etc.
