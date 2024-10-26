@@ -7,6 +7,7 @@ print(BASE_DIR)
 
 class Settings(BaseSettings):
     db_url: str
+    session_key: str
 
     class Config:
         env_file = ".env"
