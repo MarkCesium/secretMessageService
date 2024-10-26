@@ -6,10 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api import dao
 from src.core.db import db_helper
 from src.exceptions.files import FileCreateException, FileReadException
+from src.utils.flashes import get_flashed_messages, flash
 
 
 router = APIRouter()
 templates: Jinja2Templates = Jinja2Templates(directory="templates")
+templates.env.globals["get_flashed_messages"] = get_flashed_messages
 
 
 @router.post("/create", response_class=RedirectResponse)
@@ -22,7 +24,7 @@ async def create_message(
     try:
         message_hash = await dao.message_create(message, secret_key, session)
     except FileCreateException:
-        # TODO: Add flush notification
+        flash(request, "Failed to create message", "danger")
         return RedirectResponse("/", 302)
 
     return templates.TemplateResponse(
@@ -40,11 +42,11 @@ async def get_message(
     try:
         message_text = await dao.message_get(message_hash, secret_key, session)
     except FileReadException:
-        # TODO: Add flush notification
+        flash(request, "Failed to read message", "danger")
         return RedirectResponse("/", 302)
 
     if message_text is None:
-        # TODO: Add flush notification
+        flash(request, "Message not found", "danger")
         return RedirectResponse("/", 302)
 
     return templates.TemplateResponse(
