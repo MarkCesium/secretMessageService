@@ -1,24 +1,29 @@
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.utils.hasher import get_message_hash
-from src.api.schemas import Message
+from src.api import dao
+from src.core.db import db_helper
+from src.exceptions.files import FileCreateException, FileReadException
+
 
 router = APIRouter()
-messages: list[Message] = []
 templates: Jinja2Templates = Jinja2Templates(directory="templates")
 
 
 @router.post("/create", response_class=RedirectResponse)
 async def create_message(
-    request: Request, secret_key: str = Form(...), message: str = Form(...)
+    request: Request,
+    secret_key: str = Form(...),
+    message: str = Form(...),
+    session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    message_hash: str = get_message_hash(message, secret_key)
-    message: Message = Message(
-        message=message, message_hash=message_hash, message_salt=secret_key
-    )
-    messages.append(message)
+    try:
+        message_hash = await dao.message_create(message, secret_key, session)
+    except FileCreateException:
+        # TODO: Add flush notification
+        return RedirectResponse("/", 302)
 
     return templates.TemplateResponse(
         "message_info.html", context={"request": request, "message_hash": message_hash}
@@ -27,18 +32,25 @@ async def create_message(
 
 @router.post("/get")
 async def get_message(
-    request: Request, secret_key: str = Form(...), message_hash: str = Form(...)
+    request: Request,
+    secret_key: str = Form(...),
+    message_hash: str = Form(...),
+    session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    for message in messages:
-        if message.message_hash == message_hash and message.message_salt == secret_key:
-            response_message = message.message
-            messages.remove(message)
-            return templates.TemplateResponse(
-                "message.html",
-                context={"request": request, "message": response_message},
-            )
+    try:
+        message_text = await dao.message_get(message_hash, secret_key, session)
+    except FileReadException:
+        # TODO: Add flush notification
+        return RedirectResponse("/", 302)
 
-    return RedirectResponse("/", 302)
+    if message_text is None:
+        # TODO: Add flush notification
+        return RedirectResponse("/", 302)
+
+    return templates.TemplateResponse(
+        "message.html",
+        context={"request": request, "message": message_text},
+    )
 
 
 @router.get("/", response_class=HTMLResponse)
