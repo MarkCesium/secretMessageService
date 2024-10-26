@@ -57,7 +57,6 @@ async def get_message(
 async def root(request: Request):
     context = {
         "request": request,
-        "title": "Secret Message",
-        "message": "Secret Message service",
+        "title": "CesSecrets",
     }
     return templates.TemplateResponse("index.html", context)
