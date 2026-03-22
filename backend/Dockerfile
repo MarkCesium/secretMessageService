@@ -26,4 +26,4 @@ USER nonroot
 
 EXPOSE 8000
 
-CMD ["hypercorn", "src.main:app", "--bind", "::"]
+CMD ["sh", "-c", "alembic upgrade head && hypercorn src.main:app --bind ::"]
