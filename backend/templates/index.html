@@ -5,9 +5,9 @@
         <h2>Create secret message</h2>
         <form method="post" action="/create">
             <label for="secretKey">Secret key</label>
-            <input type="password" id="secretKey" name="secret_key">
+            <input type="password" id="secretKey" name="secret_key" required>
             <label for="secretMessage">Message</label>
-            <textarea id="secretMessage" name="message" placeholder="Enter your secret message here..."></textarea>
+            <textarea id="secretMessage" name="message" placeholder="Enter your secret message here..." required></textarea>
             <button type="submit" class="btn">Create</button>
         </form>
     </div>
@@ -15,9 +15,9 @@
         <h2>Get secret message</h2>
         <form method="post" action="/get">
             <label for="secretKeyGet">Secret key</label>
-            <input type="password" id="secretKeyGet" name="secret_key">
+            <input type="password" id="secretKeyGet" name="secret_key" required>
             <label for="messageHash">Message hash</label>
-            <input type="text" id="messageHash" name="message_hash" placeholder="Enter your message hash here...">
+            <input type="text" id="messageHash" name="message_hash" placeholder="Enter your message hash here..." required>
             <button type="submit" class="btn">Get</button>
         </form>
     </div>
