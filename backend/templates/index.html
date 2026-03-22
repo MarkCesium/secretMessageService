@@ -2,7 +2,7 @@
 {% block title %}CesSecrets{% endblock %}
 {% block content %}
     <div class="card">
-        <h2>Create secret message</h2>
+        <h2><span class="icon">&#128274;</span> Create secret message</h2>
         <form method="post" action="/create">
             <label for="secretKey">Secret key</label>
             <input type="password" id="secretKey" name="secret_key" required>
@@ -12,7 +12,7 @@
         </form>
     </div>
     <div class="card">
-        <h2>Get secret message</h2>
+        <h2><span class="icon">&#128273;</span> Get secret message</h2>
         <form method="post" action="/get">
             <label for="secretKeyGet">Secret key</label>
             <input type="password" id="secretKeyGet" name="secret_key" required>
