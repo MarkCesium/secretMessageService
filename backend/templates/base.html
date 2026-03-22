@@ -47,6 +47,16 @@
             margin-bottom: 2rem;
         }
 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .card {
             background: var(--c-surface);
             border: 1px solid var(--c-border);
@@ -54,7 +64,10 @@
             box-shadow: var(--shadow);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
+            animation: fadeInUp .35s ease-out both;
         }
+
+        .card:nth-child(2) { animation-delay: .1s; }
 
         .card h2 {
             font-size: 1.1rem;
@@ -80,7 +93,7 @@
             font-size: 0.9375rem;
             color: var(--c-text);
             background: var(--c-bg);
-            transition: border-color .15s;
+            transition: border-color .15s, box-shadow .15s, transform .15s;
             margin-bottom: 1rem;
         }
 
@@ -88,6 +101,7 @@
             outline: none;
             border-color: var(--c-accent);
             box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+            transform: translateY(-1px);
         }
 
         textarea { resize: vertical; min-height: 5rem; }
@@ -103,12 +117,19 @@
             border: 1px solid var(--c-accent);
             border-radius: var(--radius);
             cursor: pointer;
-            transition: background .15s, color .15s;
+            transition: background .15s, color .15s, transform .15s, box-shadow .15s;
         }
 
         .btn:hover {
             background: var(--c-accent);
             color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(37,99,235,.25);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.97);
+            box-shadow: none;
         }
 
         .alert {
@@ -119,6 +140,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: slideDown .3s ease-out;
         }
 
         .alert-danger {
@@ -144,6 +166,16 @@
         }
 
         .result { word-break: break-all; white-space: pre-wrap; }
+
+        .copyable {
+            cursor: pointer;
+            transition: background .15s;
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius);
+            border: 1px dashed var(--c-border);
+        }
+        .copyable:hover { background: var(--c-bg); }
+        .copyable.copied { border-color: var(--c-success); background: var(--c-success-bg); }
 
         a { color: var(--c-accent); text-decoration: none; }
         a:hover { text-decoration: underline; }
