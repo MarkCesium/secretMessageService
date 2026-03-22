@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CesSecrets{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --c-bg: #fafafa;
+            --c-surface: #fff;
+            --c-text: #1a1a1a;
+            --c-muted: #666;
+            --c-accent: #2563eb;
+            --c-accent-hover: #1d4ed8;
+            --c-border: #e2e2e2;
+            --c-danger: #dc2626;
+            --c-danger-bg: #fef2f2;
+            --c-success-bg: #f0fdf4;
+            --c-success: #16a34a;
+            --radius: 8px;
+            --shadow: 0 1px 3px rgba(0,0,0,.08);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--c-bg);
+            color: var(--c-text);
+            line-height: 1.5;
+            min-height: 100dvh;
+        }
+
+        .container {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--c-surface);
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--c-accent);
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--c-muted);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: 0.9375rem;
+            color: var(--c-text);
+            background: var(--c-bg);
+            transition: border-color .15s;
+            margin-bottom: 1rem;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--c-accent);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+        }
+
+        textarea { resize: vertical; min-height: 5rem; }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            font-family: inherit;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--c-accent);
+            background: transparent;
+            border: 1px solid var(--c-accent);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: background .15s, color .15s;
+        }
+
+        .btn:hover {
+            background: var(--c-accent);
+            color: #fff;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alert-danger {
+            background: var(--c-danger-bg);
+            color: var(--c-danger);
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: var(--c-success-bg);
+            color: var(--c-success);
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert button {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: inherit;
+            padding: 0 0 0 0.75rem;
+            line-height: 1;
+        }
+
+        .result { word-break: break-all; white-space: pre-wrap; }
+
+        a { color: var(--c-accent); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .back { display: inline-block; margin-top: 1rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    {% for msg in get_flashed_messages(request) %}
+        <div class="alert alert-{{ msg.category }}">
+            <span>{{ msg.message }}</span>
+            <button onclick="this.parentElement.remove()" aria-label="Close">&times;</button>
+        </div>
+    {% endfor %}
+    <h1>Cesium secrets</h1>
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
