@@ -1,20 +1,29 @@
-FROM python:3.12-alpine
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
 
-RUN pip install poetry==1.4.2
-
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+RUN groupadd --system --gid 999 nonroot \
+ && useradd --system --gid 999 --uid 999 --create-home nonroot
 
 WORKDIR /project
 
-COPY pyproject.toml ./
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
-RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project --no-dev
 
-COPY . .
+COPY . /project
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
+
+ENV PATH="/project/.venv/bin:$PATH"
+
+ENTRYPOINT []
+
+USER nonroot
 
 EXPOSE 8000
 
-CMD ["poetry", "run", "hypercorn", "src.main:app", "--bind", "::"]
+CMD ["hypercorn", "src.main:app", "--bind", "::"]

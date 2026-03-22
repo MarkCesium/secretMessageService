@@ -1,21 +1,27 @@
-[tool.poetry]
+[build-system]
+requires = ["uv_build>=0.9.8,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
 name = "secretmessage"
 version = "0.1.0"
 description = ""
-authors = ["MarkCesium <cesiummark01@gmail.com>"]
+authors = [{ name = "MarkCesium", email = "cesiummark01@gmail.com" }]
+requires-python = ">=3.11,<4"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.11"
-fastapi = {extras = ["all"], version = "^0.104.1"}
-sqlalchemy = "^2.0.36"
-asyncpg = "^0.30.0"
-alembic = "^1.13.3"
-greenlet = "^3.1.1"
-hypercorn = "^0.17.3"
-aiofile = "^3.9.0"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "fastapi[all]>=0.104.1,<0.105",
+    "sqlalchemy>=2.0.36,<3",
+    "asyncpg>=0.30.0,<0.31",
+    "alembic>=1.13.3,<2",
+    "greenlet>=3.1.1,<4",
+    "hypercorn>=0.17.3,<0.18",
+    "aiofile>=3.9.0,<4",
+]
