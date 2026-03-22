@@ -1,0 +1,18 @@
+services:
+  app:
+    restart: unless-stopped
+    networks:
+      - urlshortener-network
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cessecrets.rule=Host(`secrets.csmmark.me`)"
+      - "traefik.http.routers.cessecrets.entrypoints=websecure"
+      - "traefik.http.routers.cessecrets.tls.certresolver=letsencrypt"
+      - "traefik.http.services.cessecrets.loadbalancer.server.port=8000"
+
+networks:
+  urlshortener-network:
+    external: true
+  traefik-network:
+    external: true
