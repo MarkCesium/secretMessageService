@@ -4,6 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api import dao
+from src.core.config import settings
 from src.core.db import db_helper
 from src.exceptions.files import FileCreateException, FileReadException
 from src.utils.flashes import get_flashed_messages, flash
@@ -21,6 +22,10 @@ async def create_message(
     message: str = Form(...),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
+    if len(message.encode("utf-8")) > settings.max_message_size:
+        flash(request, "Message too large (max 50 KB)", "danger")
+        return RedirectResponse("/", 302)
+
     try:
         message_hash = await dao.message_create(message, secret_key, session)
     except FileCreateException:
