@@ -3,7 +3,7 @@
 {% block content %}
     <div class="card">
         <h2>Message hash</h2>
-        <div class="result">{{ message_hash }}</div>
+        <div class="result copyable" onclick="var t=this,txt=t.textContent,done=function(){t.classList.add('copied');setTimeout(function(){t.classList.remove('copied')},1500)};if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done)}else{var s=document.createElement('textarea');s.value=txt;s.style.position='fixed';s.style.opacity='0';document.body.appendChild(s);s.select();document.execCommand('copy');document.body.removeChild(s);done()}" title="Click to copy">{{ message_hash }}</div>
         <a href="/" class="back">Back to main</a>
     </div>
 {% endblock %}
