@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - "backend/**"
       - "docker-compose*.yaml"
@@ -21,5 +21,5 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
             cd /home/cessecrets
-            git pull origin main
+            git pull origin master
             docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --build
