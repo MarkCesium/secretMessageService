@@ -360,7 +360,11 @@
 
         .btn-secondary + .btn-secondary { margin-top: 0.5rem; }
         .copy-btn { margin-top: 0.75rem; }
-        .copied { color: var(--c-success); border-color: var(--c-success); }
+        .btn-secondary.copied,
+        .btn-secondary.copied:hover {
+            color: var(--c-success);
+            border-color: var(--c-success);
+        }
 
         .success-header {
             display: flex;
@@ -453,7 +457,7 @@ function togglePassword(btn) {
 }
 
 function copyText(text, btn) {
-    navigator.clipboard.writeText(text).then(function() {
+    function onSuccess() {
         var orig = btn.textContent;
         btn.classList.add('copied');
         btn.textContent = 'Copied!';
@@ -461,7 +465,20 @@ function copyText(text, btn) {
             btn.classList.remove('copied');
             btn.textContent = orig;
         }, 1500);
-    });
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onSuccess);
+    } else {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        onSuccess();
+    }
 }
 
 document.querySelectorAll('form').forEach(function(form) {
