@@ -1,34 +1,38 @@
-from fastapi import APIRouter, Request, Form, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Form, Request
+from fastapi.responses import HTMLResponse, RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api import dao
 from src.core.config import settings
 from src.core.db import db_helper
-from src.exceptions.files import FileCreateException, FileReadException
-from src.utils.flashes import get_flashed_messages, flash
-
+from src.exceptions.files import FileCreateError, FileReadError
+from src.utils.flashes import flash, get_flashed_messages
 
 router = APIRouter()
 templates: Jinja2Templates = Jinja2Templates(directory="templates")
 templates.env.globals["get_flashed_messages"] = get_flashed_messages
 
+SessionDep = Annotated[AsyncSession, Depends(db_helper.session_getter)]
+FormStr = Annotated[str, Form()]
+
 
 @router.post("/create", response_class=RedirectResponse)
 async def create_message(
     request: Request,
-    secret_key: str = Form(...),
-    message: str = Form(...),
-    session: AsyncSession = Depends(db_helper.session_getter),
-):
+    secret_key: FormStr,
+    message: FormStr,
+    session: SessionDep,
+) -> Response:
     if len(message.encode("utf-8")) > settings.max_message_size:
         flash(request, "Message too large (max 50 KB)", "danger")
         return RedirectResponse("/", 302)
 
     try:
         message_hash = await dao.message_create(message, secret_key, session)
-    except FileCreateException:
+    except FileCreateError:
         flash(request, "Failed to create message", "danger")
         return RedirectResponse("/", 302)
 
@@ -40,13 +44,13 @@ async def create_message(
 @router.post("/get")
 async def get_message(
     request: Request,
-    secret_key: str = Form(...),
-    message_hash: str = Form(...),
-    session: AsyncSession = Depends(db_helper.session_getter),
-):
+    secret_key: FormStr,
+    message_hash: FormStr,
+    session: SessionDep,
+) -> Response:
     try:
         message_text = await dao.message_get(message_hash, secret_key, session)
-    except FileReadException:
+    except FileReadError:
         flash(request, "Failed to read message", "danger")
         return RedirectResponse("/", 302)
 
@@ -61,7 +65,7 @@ async def get_message(
 
 
 @router.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request) -> Response:
     context = {
         "request": request,
         "title": "CesSecrets",

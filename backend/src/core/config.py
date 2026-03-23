@@ -1,5 +1,6 @@
-from pydantic_settings import BaseSettings
 from pathlib import Path
+
+from pydantic_settings import BaseSettings
 
 BASE_DIR = Path(__file__).parent.parent.parent
 print(BASE_DIR)
@@ -15,4 +16,4 @@ class Settings(BaseSettings):
         env_file = ".env"
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]

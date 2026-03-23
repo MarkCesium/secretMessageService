@@ -1,10 +1,10 @@
-class FileCreateException(Exception):
+class FileCreateError(Exception):
     """
     Raises when a file cannot be created
     """
 
 
-class FileReadException(Exception):
+class FileReadError(Exception):
     """
     Raises when a file cannot be read
     """

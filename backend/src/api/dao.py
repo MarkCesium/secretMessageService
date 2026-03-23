@@ -1,13 +1,13 @@
 import os
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.utils.hasher import get_message_hash
-from src.utils.files import create_file, get_from_file
-from src.core.models import Message
 from src.core.config import BASE_DIR, settings
-from src.exceptions.files import FileCreateException, FileReadException
+from src.core.models import Message
+from src.exceptions.files import FileCreateError, FileReadError
+from src.utils.files import create_file, get_from_file
+from src.utils.hasher import get_message_hash
 
 MESSAGES_DIR = BASE_DIR / "messages"
 
@@ -64,7 +64,7 @@ async def message_create(message: str, secret_key: str, session: AsyncSession) -
 
     except Exception as e:
         print(e)
-        raise FileCreateException
+        raise FileCreateError from e
 
 
 async def message_get(
@@ -84,6 +84,6 @@ async def message_get(
         text = await get_from_file(message.message_path)
     except Exception as e:
         print(e)
-        raise FileReadException
+        raise FileReadError from e
 
     return text

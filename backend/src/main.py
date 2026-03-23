@@ -13,7 +13,9 @@ app.include_router(router)
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> RedirectResponse:
     flash(request, "All fields are required", "danger")
     return RedirectResponse("/", 302)
 app.add_middleware(
