@@ -37,7 +37,7 @@ async def create_message(
         return RedirectResponse("/", 302)
 
     return templates.TemplateResponse(
-        "message_info.html", context={"request": request, "message_hash": message_hash}
+        request, "message_info.html", context={"message_hash": message_hash}
     )
 
 
@@ -59,15 +59,10 @@ async def get_message(
         return RedirectResponse("/", 302)
 
     return templates.TemplateResponse(
-        "message.html",
-        context={"request": request, "message": message_text},
+        request, "message.html", context={"message": message_text}
     )
 
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request) -> Response:
-    context = {
-        "request": request,
-        "title": "CesSecrets",
-    }
-    return templates.TemplateResponse("index.html", context)
+    return templates.TemplateResponse(request, "index.html", context={"title": "CesSecrets"})
