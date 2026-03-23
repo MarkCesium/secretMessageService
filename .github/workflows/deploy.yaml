@@ -9,9 +9,13 @@ on:
       - ".github/workflows/**"
 
 jobs:
+  ci:
+    uses: ./.github/workflows/ci.yaml
+
   deploy:
     name: Deploy to VPS
     runs-on: ubuntu-latest
+    needs: ci
     steps:
       - name: Deploy using ssh
         uses: appleboy/ssh-action@master
