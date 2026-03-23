@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-dev
 
 COPY . /project
-RUN chown nonroot:nonroot /project/messages
+RUN mkdir -p /project/messages && chown nonroot:nonroot /project/messages
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
