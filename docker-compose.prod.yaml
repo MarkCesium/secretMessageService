@@ -2,7 +2,7 @@ services:
   app:
     restart: unless-stopped
     networks:
-      - urlshortener-network
+      - shared-network
       - traefik-network
     labels:
       - "traefik.enable=true"
@@ -12,7 +12,8 @@ services:
       - "traefik.http.services.cessecrets.loadbalancer.server.port=8000"
 
 networks:
-  urlshortener-network:
+  shared-network:
     external: true
+    name: shared-network
   traefik-network:
     external: true
